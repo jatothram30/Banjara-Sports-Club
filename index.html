@@ -1,47 +1,141 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080808"><title>Banjara Sports Club</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<title>Banjara Sports Club</title>
 <style>
-:root{--gold:#d6ad48;--bg:#090909;--panel:#171717;--muted:#aaa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:16px system-ui,Arial}
-header{padding:22px 16px;text-align:center;background:linear-gradient(145deg,#050505,#252016);border-bottom:1px solid #6e5726}
-.crest{width:74px;height:74px;margin:auto auto 8px;border:2px solid var(--gold);border-radius:18px;display:grid;place-items:center;color:var(--gold);font-size:34px}
-h1{font-size:22px;margin:5px;color:var(--gold);letter-spacing:1px}header p{margin:4px;color:#ddd;font-size:12px;letter-spacing:2px}
-main{max-width:680px;margin:auto;padding:16px}.card{background:var(--panel);border:1px solid #393126;border-radius:16px;padding:16px;margin:14px 0}
-h2{font-size:17px;color:var(--gold);margin:0 0 12px}.score{font-size:42px;font-weight:800;text-align:center}.overs{text-align:center;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.grid button,.actions button{background:#26221a;color:#fff;border:1px solid #705a2b;border-radius:12px;padding:13px;font-size:16px;font-weight:700}
-button:active{transform:scale(.97)}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
-button.primary{background:var(--gold);color:#111;border:0}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.small{font-size:13px;color:var(--muted)}#history{white-space:pre-wrap;line-height:1.7;color:#ddd}
-footer{text-align:center;color:#777;padding:20px;font-size:12px}
-</style></head>
+:root{--gold:#d6ad48;--bg:#090909;--panel:#171717;--muted:#aaa;--line:#44391f;--green:#65c98a;--red:#f07878}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:15px system-ui,Arial}
+header{padding:20px 14px;text-align:center;background:linear-gradient(145deg,#050505,#252016);border-bottom:1px solid #6e5726;position:sticky;top:0;z-index:5}
+.crest{width:62px;height:62px;margin:auto auto 7px;border:2px solid var(--gold);border-radius:17px;display:grid;place-items:center;color:var(--gold);font-size:30px}
+h1{font-size:21px;margin:4px;color:var(--gold);letter-spacing:1px}header p{margin:3px;color:#ddd;font-size:11px;letter-spacing:2px}
+main{max-width:760px;margin:auto;padding:12px}.card{background:var(--panel);border:1px solid #393126;border-radius:16px;padding:15px;margin:12px 0}
+h2{font-size:17px;color:var(--gold);margin:0 0 12px}.muted,.small{color:var(--muted)}.small{font-size:12px}
+.score{font-size:44px;font-weight:800;text-align:center;line-height:1.2}.overs{text-align:center;color:var(--muted);margin-top:3px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.row.wrap{flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}
+button,select,input{font:inherit}button{background:#26221a;color:#fff;border:1px solid #705a2b;border-radius:11px;padding:12px;font-weight:700;cursor:pointer}button:active{transform:scale(.98)}
+button.gold{background:var(--gold);color:#111;border:0}button.danger{border-color:#8b4141;color:#ffb4b4}button.green{border-color:#39744d;color:#baf0ca}
+input,select{width:100%;background:#0e0e0e;color:#fff;border:1px solid #51452b;border-radius:9px;padding:11px;margin:4px 0 9px}
+label{font-size:12px;color:#c8b783;display:block;margin-top:5px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:8px 0}.tabs button{white-space:nowrap;padding:9px 13px}.tabs button.active{background:var(--gold);color:#111}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px 5px;border-bottom:1px solid #34302a}th{color:var(--gold);font-weight:700}.right{text-align:right}
+.pill{border:1px solid #5a4a26;color:#e6c76e;border-radius:99px;padding:4px 9px;font-size:11px}
+.hidden{display:none!important}.notice{padding:10px;border:1px solid #594a26;border-radius:10px;color:#e9d69b;font-size:12px}
+.playerline{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #302d28}.playerline:last-child{border:0}
+footer{text-align:center;color:#777;padding:18px;font-size:11px}
+@media(max-width:420px){.formgrid{grid-template-columns:1fr}.score{font-size:40px}}
+</style>
+</head>
 <body>
 <header><div class="crest">🏏</div><h1>BANJARA SPORTS CLUB</h1><p>PLAY • COMPETE • WIN</p></header>
 <main>
-<section class="card"><h2>Live Score</h2><div class="score"><span id="runs">0</span>/<span id="wkts">0</span></div><div class="overs">Overs: <span id="overs">0.0</span></div>
-<div class="row small" style="margin-top:12px"><span id="bat">Batting: Team A</span><span id="target"></span></div></section>
-<section class="card"><h2>Ball-by-ball scoring</h2><div class="grid">
-<button onclick="add(0)">0</button><button onclick="add(1)">1</button><button onclick="add(2)">2</button>
-<button onclick="add(3)">3</button><button onclick="add(4)">4</button><button onclick="add(6)">6</button>
-</div><div class="actions">
-<button onclick="extra('WD')">Wide</button><button onclick="extra('NB')">No Ball</button>
-<button onclick="extra('B')">Byes</button><button onclick="extra('LB')">Leg Byes</button>
-<button onclick="wicket()">Wicket</button><button onclick="undo()">Undo</button>
-</div><div class="actions"><button class="primary" onclick="newInnings()">Reset innings</button><button onclick="toggleStrike()">Change strike</button></div>
+<section class="card" id="setup">
+ <h2>New Match Setup</h2>
+ <div class="formgrid">
+  <div><label>Team A</label><input id="teamA" value="Team A"></div>
+  <div><label>Team B</label><input id="teamB" value="Team B"></div>
+  <div><label>Overs</label><input id="maxOvers" type="number" min="1" max="100" value="20"></div>
+  <div><label>Match type</label><select id="matchType"><option>T20</option><option>ODI</option><option>Test</option><option>Custom</option></select></div>
+  <div><label>Striker</label><input id="strikerName" placeholder="Opening batter"></div>
+  <div><label>Non-striker</label><input id="nonStrikerName" placeholder="Opening batter"></div>
+  <div><label>Opening bowler</label><input id="bowlerName" placeholder="Bowler"></div>
+  <div><label>Venue / Ground</label><input id="venue" placeholder="Ground name"></div>
+ </div>
+ <button class="gold" style="width:100%" onclick="startMatch()">Start Match</button>
 </section>
-<section class="card"><div class="row"><h2>Ball history</h2><span class="small" id="balls">0 legal balls</span></div><div id="history">No balls recorded yet.</div></section>
-</main><footer>Banjara Sports Club • Cricket scoring starter</footer>
+
+<section id="match" class="hidden">
+ <section class="card">
+  <div class="row"><span class="pill" id="inningsLabel">1st Innings</span><span class="small" id="matchMeta"></span></div>
+  <div class="small" id="teamsLabel" style="text-align:center;margin-top:8px">Team A vs Team B</div>
+  <div class="score"><span id="runs">0</span>/<span id="wkts">0</span></div>
+  <div class="overs">Overs <b id="overs">0.0</b> <span id="maxOversLabel">/ 20</span></div>
+  <div class="row small" style="margin-top:12px"><span id="runRate">Run rate: 0.00</span><span id="target"></span></div>
+ </section>
+ <section class="card">
+  <h2>Batting now</h2>
+  <div class="playerline"><span>★ <b id="strikerView">Batter 1</b> <span class="small">(on strike)</span></span><b id="strikerStats">0 (0)</b></div>
+  <div class="playerline"><span id="nonStrikerView">Batter 2</span><b id="nonStrikerStats">0 (0)</b></div>
+  <div class="playerline"><span>Bowler: <b id="bowlerView">Bowler</b></span><b id="bowlerStats">0/0</b></div>
+ </section>
+ <section class="card">
+  <h2>Ball-by-ball scoring</h2>
+  <div class="grid">
+   <button onclick="score(0)">0</button><button onclick="score(1)">1</button><button onclick="score(2)">2</button>
+   <button onclick="score(3)">3</button><button onclick="score(4)">4</button><button onclick="score(6)">6</button>
+  </div>
+  <div class="actions">
+   <button onclick="extra('WD')">Wide</button><button onclick="extra('NB')">No Ball</button>
+   <button onclick="extra('B')">Byes</button><button onclick="extra('LB')">Leg Byes</button>
+   <button onclick="wicket()">Wicket</button><button onclick="undo()" class="danger">Undo</button>
+  </div>
+  <div class="actions">
+   <button onclick="changeStrike()">Change Strike</button><button onclick="changeBowler()">Change Bowler</button>
+   <button onclick="retiredHurt()">Retired Hurt</button><button onclick="replaceBatter()">Replace Batter</button>
+  </div>
+  <div class="actions">
+   <button class="gold" onclick="endInnings()">End Innings</button><button onclick="shareScore()" class="green">Share Live Score</button>
+  </div>
+  <p class="notice" id="status">Scoring is saved on this device. Use Share Live Score to send the current score.</p>
+ </section>
+ <section class="card">
+  <div class="tabs"><button class="active" onclick="showTab('scorecard',this)">Scorecard</button><button onclick="showTab('history',this)">Ball History</button><button onclick="showTab('stats',this)">Stats</button></div>
+  <div id="scorecard">
+   <h2>Batting Scorecard</h2><div id="battingTable"></div>
+   <h2 style="margin-top:16px">Bowling</h2><div id="bowlingTable"></div>
+  </div>
+  <div id="history" class="hidden"><div id="historyList" class="small">No balls recorded.</div></div>
+  <div id="stats" class="hidden"><div id="statsView" class="small"></div></div>
+ </section>
+</section>
+<footer>Banjara Sports Club • Cricket Scoring</footer>
+</main>
 <script>
-let s={r:0,w:0,b:0,log:[],strike:0};
-function render(){document.getElementById('runs').textContent=s.r;document.getElementById('wkts').textContent=s.w;document.getElementById('overs').textContent=Math.floor(s.b/6)+'.'+s.b%6;document.getElementById('balls').textContent=s.b+' legal balls';document.getElementById('history').textContent=s.log.length?s.log.slice().reverse().join('\n'):'No balls recorded yet.'}
-function save(label,r=0,legal=true,w=0){s.log.push(label);s.r+=r;s.w+=w;if(legal)s.b++;render()}
-function add(n){save(String(n),n,true);if(n%2)s.strike^=1}
-function extra(t){let n=1;if(t==='B'||t==='LB'){let v=prompt(t==='B'?'Byes?':'Leg byes?','1');if(v===null)return;n=Math.max(0,parseInt(v)||0);save(t+' '+n,n,true);return}save(t,t==='WD'||t==='NB'?1:0,false)}
-function wicket(){if(s.w>=10)return;save('W',0,true,1)}
-function undo(){if(!s.log.length)return;let label=s.log.pop();if(label==='W')s.w--;else if(label==='WD'||label==='NB')s.r--;else if(label.startsWith('B ')||label.startsWith('LB ')){let n=parseInt(label.split(' ')[1])||0;s.r-=n;s.b--}else{let n=parseInt(label)||0;s.r-=n;s.b--;};s.b=Math.max(0,s.b);s.r=Math.max(0,s.r);render()}
-function newInnings(){if(!confirm('Reset this innings?'))return;s={r:0,w:0,b:0,log:[],strike:0};render()}
-function toggleStrike(){s.strike^=1;alert('Strike changed (manual selection can be added in the full scorer screen).')}
-render();
-</script></body></html>
+const $=id=>document.getElementById(id);
+let m=null, undoStack=[];
+function player(name){return {name,r:0,b:0,f:0,s:0,out:false,dismissal:'not out',retired:false};}
+function startMatch(){
+ const a=$('teamA').value.trim()||'Team A', b=$('teamB').value.trim()||'Team B';
+ const striker=player($('strikerName').value.trim()||'Batter 1'), non=player($('nonStrikerName').value.trim()||'Batter 2');
+ m={a,b,bat:a,bowl:b,overs:+$('maxOvers').value||20,matchType:$('matchType').value,venue:$('venue').value,
+ innings:1,target:null,r:0,w:0,balls:0,extras:0,wd:0,nb:0,byes:0,lb:0,batters:[striker,non],si:0,ni:1,bowler:{name:$('bowlerName').value.trim()||'Bowler',o:0,balls:0,r:0,w:0},bowlers:[],log:[],innings1:null};
+ $('setup').classList.add('hidden');$('match').classList.remove('hidden');render();
+}
+function snap(){undoStack.push(JSON.stringify(m));if(undoStack.length>80)undoStack.shift();}
+function legalBall(){m.balls++;m.bowler.balls++;if(m.bowler.balls===6){m.bowler.o++;m.bowler.balls=0;}}
+function rotate(){[m.si,m.ni]=[m.ni,m.si];}
+function record(label,legal=true){m.log.push(label);if(legal){legalBall();}}
+function score(n){if(!m||done())return;snap();let p=m.batters[m.si];p.r+=n;p.b++;if(n===4)p.f++;if(n===6)p.s++;m.r+=n;m.bowler.r+=n;record(String(n));if(n%2)rotate();if(m.balls%6===0)rotate();render();}
+function extra(t){if(!m||done())return;let v=1;if(t==='B'||t==='LB'){v=parseInt(prompt(t==='B'?'Runs completed as byes?':'Runs completed as leg byes?','1'),10);if(!Number.isFinite(v)||v<0)return;}snap();
+ if(t==='WD'){m.r++;m.extras++;m.wd++;m.bowler.r++;record('WD',false);}
+ if(t==='NB'){m.r++;m.extras++;m.nb++;m.bowler.r++;record('NB',false);}
+ if(t==='B'){m.r+=v;m.extras+=v;m.byes+=v;m.batters[m.si].b++;record('B '+v);}
+ if(t==='LB'){m.r+=v;m.extras+=v;m.lb+=v;m.batters[m.si].b++;record('LB '+v);}
+ render();}
+function wicket(){if(!m||done()||m.w>=10)return;snap();let p=m.batters[m.si];p.out=true;p.dismissal=prompt('Dismissal (Bowled / Caught / LBW / Run out / Stumped)','Bowled')||'Wicket';m.w++;m.bowler.w++;record('W');render();}
+function replaceBatter(){if(!m)return;let name=prompt('New batter name?','New Batter');if(!name)return;snap();let p=player(name);m.batters[m.si]=p;render();}
+function retiredHurt(){if(!m)return;let p=m.batters[m.si];if(!p)return;snap();p.retired=true;p.dismissal='retired hurt';let name=prompt('Replacement batter name?','Replacement');if(name)m.batters[m.si]=player(name);render();}
+function changeStrike(){if(!m)return;snap();rotate();render();}
+function changeBowler(){if(!m)return;let name=prompt('Next bowler name?');if(!name)return;snap();m.bowlers.push(m.bowler);m.bowler={name,o:0,balls:0,r:0,w:0};render();}
+function undo(){if(!undoStack.length)return;m=JSON.parse(undoStack.pop());render();}
+function done(){return m.w>=10||m.balls>=m.overs*6||(m.target!==null&&m.r>=m.target);}
+function endInnings(){if(!m)return;if(m.innings===1){if(!confirm('End first innings and start chase?'))return;snap();m.innings1={r:m.r,w:m.w,balls:m.balls,bat:m.bat,bowl:m.bowl};m.target=m.r+1;[m.bat,m.bowl]=[m.bowl,m.bat];m.r=0;m.w=0;m.balls=0;m.extras=0;m.wd=0;m.nb=0;m.byes=0;m.lb=0;m.batters=[player('New Batter 1'),player('New Batter 2')];m.si=0;m.ni=1;m.bowler={name:'New Bowler',o:0,balls:0,r:0,w:0};m.bowlers=[];m.log=[];m.innings=2;undoStack=[];render();}else{alert('Match finished. Final score: '+m.bat+' '+m.r+'/'+m.w);}}
+function fmtOvers(b){return Math.floor(b/6)+'.'+(b%6);}
+function render(){if(!m)return;
+ $('inningsLabel').textContent=m.innings===1?'1st Innings':'2nd Innings';$('matchMeta').textContent=m.matchType+(m.venue?' • '+m.venue:'');
+ $('teamsLabel').textContent=m.a+' vs '+m.b;$('runs').textContent=m.r;$('wkts').textContent=m.w;$('overs').textContent=fmtOvers(m.balls);$('maxOversLabel').textContent='/ '+m.overs;
+ $('runRate').textContent='Run rate: '+(m.balls?(m.r/(m.balls/6)).toFixed(2):'0.00');$('target').textContent=m.target?'Target: '+m.target:'';
+ const s=m.batters[m.si],n=m.batters[m.ni];$('strikerView').textContent=s?.name||'—';$('nonStrikerView').textContent=n?.name||'—';$('strikerStats').textContent=s?`${s.r} (${s.b})`:'—';$('nonStrikerStats').textContent=n?`${n.r} (${n.b})`:'—';$('bowlerView').textContent=m.bowler.name;$('bowlerStats').textContent=`${m.bowler.r}/${m.bowler.w} (${fmtOvers(m.bowler.o*6+m.bowler.balls)})`;
+ $('battingTable').innerHTML='<table><tr><th>Batter</th><th class="right">R</th><th class="right">B</th><th class="right">4s</th><th class="right">6s</th></tr>'+m.batters.map(p=>`<tr><td>${esc(p.name)}<div class="small">${esc(p.dismissal)}</div></td><td class="right">${p.r}</td><td class="right">${p.b}</td><td class="right">${p.f}</td><td class="right">${p.s}</td></tr>`).join('')+`<tr><td>Extras</td><td class="right" colspan="4">${m.extras} (WD ${m.wd}, NB ${m.nb}, B ${m.byes}, LB ${m.lb})</td></tr><tr><th>Total</th><th class="right" colspan="4">${m.r}/${m.w} (${fmtOvers(m.balls)} ov)</th></tr></table>`;
+ $('bowlingTable').innerHTML='<table><tr><th>Bowler</th><th class="right">O</th><th class="right">R</th><th class="right">W</th></tr>'+[...m.bowlers,m.bowler].map(p=>`<tr><td>${esc(p.name)}</td><td class="right">${fmtOvers(p.o*6+p.balls)}</td><td class="right">${p.r}</td><td class="right">${p.w}</td></tr>`).join('')+'</table>';
+ $('historyList').textContent=m.log.length?m.log.slice().reverse().join('  •  '):'No balls recorded.';$('statsView').textContent=`${m.bat} — ${m.r}/${m.w} in ${fmtOvers(m.balls)} overs. Run rate ${(m.balls?(m.r/(m.balls/6)):0).toFixed(2)}. Extras: ${m.extras}.`;
+ $('status').textContent=done()?'Innings limit/reach condition reached. End innings when ready.':'Scoring is active. Current score is saved in this session; use Share Live Score to send it.';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function showTab(id,btn){['scorecard','history','stats'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function shareScore(){if(!m)return;let t=`${m.bat}: ${m.r}/${m.w} (${fmtOvers(m.balls)} overs)\n${m.a} vs ${m.b}\n${m.innings===2?'Target: '+m.target:''}\nBanjara Sports Club Live Score`;if(navigator.share)navigator.share({title:'Banjara Sports Club Live Score',text:t}).catch(()=>{});else if(navigator.clipboard){navigator.clipboard.writeText(t);alert('Score copied. Share it in WhatsApp.');}else alert(t);}
+</script>
+</body></html>

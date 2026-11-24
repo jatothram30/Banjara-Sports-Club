@@ -1,10 +1,10 @@
 {
   "name": "banjara-sports-club",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Banjara Sports Club cricket scoring app starter",
+  "description": "Banjara Sports Club cricket live scoring app",
   "scripts": {
-    "build": "echo Static app ready",
+    "build": "node -e \"const fs=require('fs');fs.mkdirSync('www',{recursive:true});if(!fs.existsSync('www/index.html'))fs.copyFileSync('index.html','www/index.html')\"",
     "android:sync": "cap sync android"
   },
   "dependencies": {
