@@ -7,18 +7,23 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -26,24 +31,36 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Locate Android SDK
+        run: |
+          echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}" >> $GITHUB_ENV
 
-      - name: Install dependencies
+      - name: Install Android SDK Packages
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found"
+            exit 1
+          fi
+          yes | "$SDKMANAGER" --licenses || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Install Dependencies
         run: npm install
 
-      - name: Prepare web files
+      - name: Prepare Web Files
         run: |
           mkdir -p www
           cp index.html www/index.html
 
-      - name: Add Android platform
+      - name: Add Android Platform
         run: npx cap add android
 
-      - name: Sync Android
+      - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build APK
+      - name: Build Debug APK
         run: |
           cd android
           chmod +x gradlew
@@ -54,4 +71,5 @@ jobs:
         with:
           name: Banjara-Sports-Club-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
           
