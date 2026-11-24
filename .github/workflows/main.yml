@@ -19,6 +19,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Find Project Folder
+        run: |
+          echo "Repository files:"
+          ls -la
+          FILE=$(find . -name package.json -not -path '*/node_modules/*' -not -path '*/android/*' -print -quit)
+          if [ -z "$FILE" ]; then
+            echo "ERROR: package.json not found"
+            exit 1
+          fi
+          PROJECT_DIR=$(dirname "$FILE")
+          echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
+          echo "Found project at: $PROJECT_DIR"
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,44 +43,32 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Configure Android SDK
-        run: |
-          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-
-      - name: Find SDK Manager
+      - name: Install Android SDK
         run: |
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)
-          if [ -z "$SDKMANAGER" ]; then
-            echo "SDK Manager not found"
-            exit 1
-          fi
-          echo "SDKMANAGER=$SDKMANAGER" >> $GITHUB_ENV
-
-      - name: Accept Android Licenses
-        run: |
           yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses || true
-
-      - name: Install Android Packages
-        run: |
           "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Install Dependencies
+        working-directory: ${{ env.PROJECT_DIR }}
         run: npm install
 
       - name: Prepare Web Files
+        working-directory: ${{ env.PROJECT_DIR }}
         run: |
           mkdir -p www
           cp index.html www/index.html
 
       - name: Add Android Platform
+        working-directory: ${{ env.PROJECT_DIR }}
         run: npx cap add android
 
       - name: Sync Capacitor
+        working-directory: ${{ env.PROJECT_DIR }}
         run: npx cap sync android
 
       - name: Build APK
+        working-directory: ${{ env.PROJECT_DIR }}
         run: |
           cd android
           chmod +x gradlew
@@ -77,6 +78,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Banjara-Sports-Club-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.PROJECT_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
